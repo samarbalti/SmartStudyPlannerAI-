@@ -1,0 +1,61 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\admin\\Downloads\\SmartStudyPlannerAI (1)\\wwwroot\\css\\dark-mode.css",
+      "PackagePath": "staticwebassets\\css\\dark-mode.css"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Downloads\\SmartStudyPlannerAI (1)\\wwwroot\\css\\dashboard.css",
+      "PackagePath": "staticwebassets\\css\\dashboard.css"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Downloads\\SmartStudyPlannerAI (1)\\wwwroot\\css\\site.css",
+      "PackagePath": "staticwebassets\\css\\site.css"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Downloads\\SmartStudyPlannerAI (1)\\wwwroot\\js\\chatbot.js",
+      "PackagePath": "staticwebassets\\js\\chatbot.js"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Downloads\\SmartStudyPlannerAI (1)\\wwwroot\\js\\dark-mode.js",
+      "PackagePath": "staticwebassets\\js\\dark-mode.js"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Downloads\\SmartStudyPlannerAI (1)\\wwwroot\\js\\dashboard.js",
+      "PackagePath": "staticwebassets\\js\\dashboard.js"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Downloads\\SmartStudyPlannerAI (1)\\wwwroot\\js\\notifications.js",
+      "PackagePath": "staticwebassets\\js\\notifications.js"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Downloads\\SmartStudyPlannerAI (1)\\wwwroot\\js\\pomodoro.js",
+      "PackagePath": "staticwebassets\\js\\pomodoro.js"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Downloads\\SmartStudyPlannerAI (1)\\wwwroot\\js\\site.js",
+      "PackagePath": "staticwebassets\\js\\site.js"
+    },
+    {
+      "Id": "C:\\Users\\admin\\Downloads\\SmartStudyPlannerAI (1)\\wwwroot\\js\\study-plan.js",
+      "PackagePath": "staticwebassets\\js\\study-plan.js"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.SmartStudyPlannerAI.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.SmartStudyPlannerAI.props",
+      "PackagePath": "build\\SmartStudyPlannerAI.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.SmartStudyPlannerAI.props",
+      "PackagePath": "buildMultiTargeting\\SmartStudyPlannerAI.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.SmartStudyPlannerAI.props",
+      "PackagePath": "buildTransitive\\SmartStudyPlannerAI.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
