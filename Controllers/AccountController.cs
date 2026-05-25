@@ -38,8 +38,9 @@ public class AccountController : Controller
         Response.Cookies.Append("AuthToken", token!, new CookieOptions
         {
             HttpOnly = true,
-            Secure = true,
+            Secure = Request.IsHttps,
             SameSite = SameSiteMode.Strict,
+            Path = "/",
             Expires = DateTime.Now.AddDays(7)
         });
 
@@ -62,6 +63,26 @@ public class AccountController : Controller
         {
             ModelState.AddModelError("", message);
             return View(dto);
+        }
+
+        var (user, token) = await _authService.LoginAsync(new LoginDTO
+        {
+            Email = dto.Email,
+            Password = dto.Password
+        });
+
+        if (user != null && !string.IsNullOrEmpty(token))
+        {
+            Response.Cookies.Append("AuthToken", token, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = Request.IsHttps,
+                SameSite = SameSiteMode.Strict,
+                Path = "/",
+                Expires = DateTime.Now.AddDays(7)
+            });
+
+            return RedirectToAction("Index", "Dashboard");
         }
 
         TempData["Success"] = message;
@@ -119,7 +140,7 @@ public class AccountController : Controller
 
     public IActionResult Logout()
     {
-        Response.Cookies.Delete("AuthToken");
+        Response.Cookies.Delete("AuthToken", new CookieOptions { Path = "/" });
         return RedirectToAction("Login");
     }
 }

@@ -24,7 +24,7 @@ public class EmailService : IEmailService
         message.Body = bodyBuilder.ToMessageBody();
 
         using var client = new SmtpClient();
-        await client.ConnectAsync(_configuration["Email:SmtpServer"], int.Parse(_configuration["Email:SmtpPort"]!), bool.Parse(_configuration["Email:EnableSsl"]!));
+        await client.ConnectAsync(_configuration["Email:SmtpServer"], int.Parse(_configuration["Email:SmtpPort"]!), MailKit.Security.SecureSocketOptions.StartTls);
         await client.AuthenticateAsync(_configuration["Email:SenderEmail"], _configuration["Email:SenderPassword"]);
         await client.SendAsync(message);
         await client.DisconnectAsync(true);

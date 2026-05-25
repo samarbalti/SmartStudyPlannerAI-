@@ -21,28 +21,28 @@
             </div>
             <ul class="list-unstyled components">
                 <li class="@((ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard") ? "active" : "")">
-                    <a href="/Dashboard"><i class="fas fa-home"></i> Tableau de bord</a>
+                    <a href="/Dashboard/Index"><i class="fas fa-home"></i> Tableau de bord</a>
                 </li>
                 <li class="@((ViewContext.RouteData.Values["Controller"]?.ToString() == "Subjects") ? "active" : "")">
-                    <a href="/Subjects"><i class="fas fa-book"></i> Matieres</a>
+                    <a href="/Subjects/Index"><i class="fas fa-book"></i> Matieres</a>
                 </li>
                 <li class="@((ViewContext.RouteData.Values["Controller"]?.ToString() == "Tasks") ? "active" : "")">
-                    <a href="/Tasks"><i class="fas fa-tasks"></i> Taches</a>
+                    <a href="/Tasks/Index"><i class="fas fa-tasks"></i> Taches</a>
                 </li>
                 <li class="@((ViewContext.RouteData.Values["Controller"]?.ToString() == "Exams") ? "active" : "")">
-                    <a href="/Exams"><i class="fas fa-calendar-alt"></i> Examens</a>
+                    <a href="/Exams/Index"><i class="fas fa-calendar-alt"></i> Examens</a>
                 </li>
                 <li class="@((ViewContext.RouteData.Values["Controller"]?.ToString() == "StudyPlan") ? "active" : "")">
-                    <a href="/StudyPlan"><i class="fas fa-calendar-week"></i> Planning</a>
+                    <a href="/StudyPlan/Index"><i class="fas fa-calendar-week"></i> Planning</a>
                 </li>
                 <li class="@((ViewContext.RouteData.Values["Controller"]?.ToString() == "AIChat") ? "active" : "")">
-                    <a href="/AIChat"><i class="fas fa-robot"></i> Assistant IA</a>
+                    <a href="/AIChat/Index"><i class="fas fa-robot"></i> Assistant IA</a>
                 </li>
                 <li class="@((ViewContext.RouteData.Values["Controller"]?.ToString() == "Files") ? "active" : "")">
-                    <a href="/Files"><i class="fas fa-file-upload"></i> Documents</a>
+                    <a href="/Files/Index"><i class="fas fa-file-upload"></i> Documents</a>
                 </li>
                 <li class="@((ViewContext.RouteData.Values["Controller"]?.ToString() == "Statistics") ? "active" : "")">
-                    <a href="/Statistics"><i class="fas fa-chart-line"></i> Statistiques</a>
+                    <a href="/Statistics/Index"><i class="fas fa-chart-line"></i> Statistiques</a>
                 </li>
             </ul>
             <div class="sidebar-footer">

@@ -65,7 +65,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0"><i class="fas fa-tasks me-2"></i>Taches recentes</h5>
-                <a href="/Tasks" class="btn btn-sm btn-primary">Voir tout</a>
+                <a href="/Tasks/Index" class="btn btn-sm btn-primary">Voir tout</a>
             </div>
             <div class="card-body">
                 @if (Model.RecentTasks.Any())
@@ -102,7 +102,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Examens a venir</h5>
-                <a href="/Exams" class="btn btn-sm btn-primary">Voir tout</a>
+                <a href="/Exams/Index" class="btn btn-sm btn-primary">Voir tout</a>
             </div>
             <div class="card-body">
                 @if (Model.UpcomingExams.Any())
@@ -138,7 +138,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0"><i class="fas fa-calendar-week me-2"></i>Planning actif</h5>
-                <a href="/StudyPlan" class="btn btn-sm btn-primary">Gerer</a>
+                <a href="/StudyPlan/Index" class="btn btn-sm btn-primary">Gerer</a>
             </div>
             <div class="card-body">
                 @if (Model.ActiveStudyPlan != null)
@@ -178,7 +178,7 @@
                     <a href="/Subjects/Create" class="btn btn-outline-success">
                         <i class="fas fa-plus me-2"></i>Nouvelle matiere
                     </a>
-                    <a href="/AIChat" class="btn btn-outline-info">
+                    <a href="/AIChat/Index" class="btn btn-outline-info">
                         <i class="fas fa-robot me-2"></i>Parler avec l'IA
                     </a>
                 </div>

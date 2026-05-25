@@ -30,9 +30,6 @@ public class AuthService : IAuthService
         if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
             return (null, null);
 
-        if (!user.IsEmailVerified)
-            return (null, null);
-
         user.LastLogin = DateTime.UtcNow;
         await _userRepository.UpdateAsync(user);
 
