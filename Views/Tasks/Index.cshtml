@@ -1,0 +1,115 @@
+@model IEnumerable<SmartStudyPlannerAI.Models.Entities.TaskItem>
+@{
+    ViewData["Title"] = "Taches";
+    var subjects = ViewBag.Subjects as List<SmartStudyPlannerAI.Models.Entities.Subject> ?? new();
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-tasks me-2"></i>Mes taches</h2>
+    <a href="/Tasks/Create" class="btn btn-primary">
+        <i class="fas fa-plus me-2"></i>Nouvelle tache
+    </a>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-12">
+        <div class="btn-group" role="group">
+            <a href="/Tasks" class="btn btn-outline-secondary @(Context.Request.Query["status"].ToString() == "" ? "active" : "")">Toutes</a>
+            <a href="/Tasks?status=Pending" class="btn btn-outline-secondary @(Context.Request.Query["status"].ToString() == "Pending" ? "active" : "")">En attente</a>
+            <a href="/Tasks?status=Completed" class="btn btn-outline-secondary @(Context.Request.Query["status"].ToString() == "Completed" ? "active" : "")">Terminees</a>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Tache</th>
+                    <th>Matiere</th>
+                    <th>Priorite</th>
+                    <th>Statut</th>
+                    <th>Date limite</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var task in Model)
+                {
+                    var subject = subjects.FirstOrDefault(s => s.Id == task.SubjectId);
+                    <tr class="@(task.Status == "Completed" ? "table-success" : "")">
+                        <td>
+                            <strong>@task.Title</strong>
+                            @if (!string.IsNullOrEmpty(task.Description))
+                            {
+                                <br /><small class="text-muted">@task.Description</small>
+                            }
+                        </td>
+                        <td>
+                            @if (subject != null)
+                            {
+                                <span class="badge" style="background-color: @subject.Color;">@subject.Name</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">-</span>
+                            }
+                        </td>
+                        <td>
+                            <span class="badge bg-@(task.Priority == "High" ? "danger" : task.Priority == "Medium" ? "warning" : "success")">
+                                @task.Priority
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm @(task.Status == "Completed" ? "btn-success" : "btn-outline-secondary")" 
+                                    onclick="toggleTaskStatus(@task.Id)">
+                                <i class="fas @(task.Status == "Completed" ? "fa-check" : "fa-circle")"></i>
+                                @task.Status
+                            </button>
+                        </td>
+                        <td>
+                            @if (task.DueDate.HasValue)
+                            {
+                                <span class="@(task.DueDate < DateTime.Now && task.Status != "Completed" ? "text-danger fw-bold" : "")">
+                                    @task.DueDate.Value.ToString("dd/MM/yyyy")
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">-</span>
+                            }
+                        </td>
+                        <td>
+                            <a href="/Tasks/Edit/@task.Id" class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></a>
+                            <form method="post" action="/Tasks/Delete/@task.Id" class="d-inline" onsubmit="return confirm('Supprimer cette tache?');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="text-center py-5">
+        <i class="fas fa-clipboard-list fa-4x text-muted mb-3"></i>
+        <h4 class="text-muted">Aucune tache</h4>
+        <a href="/Tasks/Create" class="btn btn-primary">Creer une tache</a>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        function toggleTaskStatus(taskId) {
+            fetch('/Tasks/ToggleStatus/' + taskId, { method: 'POST' })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) location.reload();
+                });
+        }
+    </script>
+}

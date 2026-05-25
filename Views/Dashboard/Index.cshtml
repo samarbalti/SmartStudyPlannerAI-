@@ -1,0 +1,192 @@
+@model SmartStudyPlannerAI.Models.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Tableau de bord";
+}
+
+<div class="row">
+    <!-- Stats Cards -->
+    <div class="col-md-3 mb-4">
+        <div class="card stat-card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title">Taches en cours</h6>
+                        <h2 class="mb-0">@(Model.Statistics.TotalTasks - Model.Statistics.CompletedTasks)</h2>
+                    </div>
+                    <i class="fas fa-tasks fa-2x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card stat-card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title">Taches completees</h6>
+                        <h2 class="mb-0">@Model.Statistics.CompletedTasks</h2>
+                    </div>
+                    <i class="fas fa-check-circle fa-2x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card stat-card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title">Examens a venir</h6>
+                        <h2 class="mb-0">@Model.Statistics.UpcomingExams</h2>
+                    </div>
+                    <i class="fas fa-calendar-alt fa-2x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card stat-card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title">Heures d'etude</h6>
+                        <h2 class="mb-0">@Model.Statistics.TotalStudyHours</h2>
+                    </div>
+                    <i class="fas fa-clock fa-2x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Recent Tasks -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-tasks me-2"></i>Taches recentes</h5>
+                <a href="/Tasks" class="btn btn-sm btn-primary">Voir tout</a>
+            </div>
+            <div class="card-body">
+                @if (Model.RecentTasks.Any())
+                {
+                    <div class="list-group list-group-flush">
+                        @foreach (var task in Model.RecentTasks)
+                        {
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">@task.Title</h6>
+                                    <small class="text-muted">
+                                        <span class="badge bg-@(task.Priority == "High" ? "danger" : task.Priority == "Medium" ? "warning" : "success")">@task.Priority</span>
+                                        <span class="badge bg-@(task.Status == "Completed" ? "success" : "secondary")">@task.Status</span>
+                                    </small>
+                                </div>
+                                @if (task.DueDate.HasValue)
+                                {
+                                    <small class="text-muted">@task.DueDate.Value.ToString("dd/MM")</small>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted text-center">Aucune tache pour le moment</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Exams -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Examens a venir</h5>
+                <a href="/Exams" class="btn btn-sm btn-primary">Voir tout</a>
+            </div>
+            <div class="card-body">
+                @if (Model.UpcomingExams.Any())
+                {
+                    <div class="list-group list-group-flush">
+                        @foreach (var exam in Model.UpcomingExams)
+                        {
+                            var daysLeft = (exam.ExamDate - DateTime.Now).Days;
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">@exam.Title</h6>
+                                    <small class="text-muted">@exam.ExamDate.ToString("dd/MM/yyyy")</small>
+                                </div>
+                                <span class="badge bg-@(daysLeft <= 3 ? "danger" : daysLeft <= 7 ? "warning" : "info")">
+                                    @(daysLeft == 0 ? "Aujourd'hui" : daysLeft + " jours")
+                                </span>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted text-center">Aucun examen prevu</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Active Study Plan -->
+    <div class="col-md-8 mb-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-calendar-week me-2"></i>Planning actif</h5>
+                <a href="/StudyPlan" class="btn btn-sm btn-primary">Gerer</a>
+            </div>
+            <div class="card-body">
+                @if (Model.ActiveStudyPlan != null)
+                {
+                    <div class="alert alert-info">
+                        <h6>@Model.ActiveStudyPlan.Title</h6>
+                        <p class="mb-0">@Model.ActiveStudyPlan.Description</p>
+                        <small>Du @Model.ActiveStudyPlan.StartDate.ToString("dd/MM/yyyy") au @Model.ActiveStudyPlan.EndDate.ToString("dd/MM/yyyy")</small>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-4">
+                        <i class="fas fa-calendar-plus fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Aucun planning actif</p>
+                        <a href="/StudyPlan/Generate" class="btn btn-primary">Generer un planning</a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Actions rapides</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="/Tasks/Create" class="btn btn-outline-primary">
+                        <i class="fas fa-plus me-2"></i>Nouvelle tache
+                    </a>
+                    <a href="/Exams/Create" class="btn btn-outline-warning">
+                        <i class="fas fa-plus me-2"></i>Nouvel examen
+                    </a>
+                    <a href="/Subjects/Create" class="btn btn-outline-success">
+                        <i class="fas fa-plus me-2"></i>Nouvelle matiere
+                    </a>
+                    <a href="/AIChat" class="btn btn-outline-info">
+                        <i class="fas fa-robot me-2"></i>Parler avec l'IA
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/dashboard.js"></script>
+}

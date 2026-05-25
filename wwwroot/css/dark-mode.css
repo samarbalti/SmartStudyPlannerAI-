@@ -1,0 +1,52 @@
+/* Dark Mode */
+body.dark-mode {
+    background-color: #1a1a2e;
+    color: #e0e0e0;
+}
+
+body.dark-mode .card {
+    background-color: #16213e;
+    color: #e0e0e0;
+}
+
+body.dark-mode .sidebar {
+    background-color: #0f3460;
+}
+
+body.dark-mode .components li a {
+    color: #b0b0b0;
+}
+
+body.dark-mode .components li a:hover,
+body.dark-mode .components li.active a {
+    color: #fff;
+    background: #1a1a2e;
+}
+
+body.dark-mode .navbar {
+    background-color: #16213e !important;
+}
+
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+    background-color: #1a1a2e;
+    border-color: #0f3460;
+    color: #e0e0e0;
+}
+
+body.dark-mode .table {
+    color: #e0e0e0;
+}
+
+body.dark-mode .table th {
+    background-color: #0f3460;
+}
+
+body.dark-mode .chat-messages {
+    background-color: #16213e;
+}
+
+body.dark-mode .ai-message .message-content {
+    background-color: #1a1a2e;
+    color: #e0e0e0;
+}

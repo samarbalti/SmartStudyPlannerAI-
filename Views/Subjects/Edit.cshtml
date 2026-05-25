@@ -1,0 +1,40 @@
+@model SmartStudyPlannerAI.Models.DTOs.SubjectDTO
+@{
+    ViewData["Title"] = "Modifier la matiere";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-edit me-2"></i>Modifier la matiere</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" action="/Subjects/Edit/@Model.Id">
+                    <div class="mb-3">
+                        <label class="form-label">Nom</label>
+                        <input type="text" name="Name" class="form-control" value="@Model.Name" required maxlength="100" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="Description" class="form-control" rows="3">@Model.Description</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Categorie</label>
+                        <input type="text" name="Category" class="form-control" value="@Model.Category" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Couleur</label>
+                        <input type="color" name="Color" class="form-control form-control-color" value="@Model.Color" />
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Enregistrer
+                        </button>
+                        <a href="/Subjects" class="btn btn-secondary">Annuler</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

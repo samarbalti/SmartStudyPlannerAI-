@@ -1,0 +1,66 @@
+@model SmartStudyPlannerAI.Models.DTOs.TaskDTO
+@{
+    ViewData["Title"] = "Modifier la tache";
+    var subjects = ViewBag.Subjects as List<SmartStudyPlannerAI.Models.Entities.Subject> ?? new();
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-edit me-2"></i>Modifier la tache</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" action="/Tasks/Edit/@Model.Id">
+                    <div class="mb-3">
+                        <label class="form-label">Titre</label>
+                        <input type="text" name="Title" class="form-control" value="@Model.Title" required maxlength="200" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="Description" class="form-control" rows="3">@Model.Description</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Matiere</label>
+                        <select name="SubjectId" class="form-select">
+                            <option value="">-- Selectionner --</option>
+                            @foreach (var subject in subjects)
+                            {
+                                <option value="@subject.Id" selected="@(Model.SubjectId == subject.Id ? "selected" : null)">@subject.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Priorite</label>
+                            <select name="Priority" class="form-select">
+                                <option value="Low" selected="@(Model.Priority == "Low" ? "selected" : null)">Basse</option>
+                                <option value="Medium" selected="@(Model.Priority == "Medium" ? "selected" : null)">Moyenne</option>
+                                <option value="High" selected="@(Model.Priority == "High" ? "selected" : null)">Haute</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Statut</label>
+                            <select name="Status" class="form-select">
+                                <option value="Pending" selected="@(Model.Status == "Pending" ? "selected" : null)">En attente</option>
+                                <option value="InProgress" selected="@(Model.Status == "InProgress" ? "selected" : null)">En cours</option>
+                                <option value="Completed" selected="@(Model.Status == "Completed" ? "selected" : null)">Terminee</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Date limite</label>
+                            <input type="datetime-local" name="DueDate" class="form-control" 
+                                   value="@(Model.DueDate?.ToString("yyyy-MM-ddTHH:mm"))" />
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Enregistrer
+                        </button>
+                        <a href="/Tasks" class="btn btn-secondary">Annuler</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

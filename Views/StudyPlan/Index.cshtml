@@ -1,0 +1,59 @@
+@model IEnumerable<SmartStudyPlannerAI.Models.Entities.StudyPlan>
+@{
+    ViewData["Title"] = "Planning d'etude";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-calendar-week me-2"></i>Mes plannings</h2>
+    <a href="/StudyPlan/Generate" class="btn btn-primary">
+        <i class="fas fa-magic me-2"></i>Generer un planning IA
+    </a>
+</div>
+
+<div class="row">
+    @foreach (var plan in Model)
+    {
+        <div class="col-md-6 mb-4">
+            <div class="card study-plan-card @(plan.IsActive ? "border-primary" : "")">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">@plan.Title</h5>
+                    @if (plan.IsActive)
+                    {
+                        <span class="badge bg-primary">Actif</span>
+                    }
+                </div>
+                <div class="card-body">
+                    <p class="card-text">@(plan.Description ?? "Aucune description")</p>
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <small class="text-muted">Debut</small>
+                            <p class="mb-0 fw-bold">@plan.StartDate.ToString("dd/MM/yyyy")</p>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted">Fin</small>
+                            <p class="mb-0 fw-bold">@plan.EndDate.ToString("dd/MM/yyyy")</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="/StudyPlan/Details/@plan.Id" class="btn btn-sm btn-primary">Voir details</a>
+                    <form method="post" action="/StudyPlan/Delete/@plan.Id" class="d-inline" onsubmit="return confirm('Supprimer ce planning?');">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <div class="text-center py-5">
+        <i class="fas fa-calendar-alt fa-4x text-muted mb-3"></i>
+        <h4 class="text-muted">Aucun planning</h4>
+        <p class="text-muted">L'IA peut generer un planning optimise pour vous</p>
+        <a href="/StudyPlan/Generate" class="btn btn-primary">
+            <i class="fas fa-magic me-2"></i>Generer maintenant
+        </a>
+    </div>
+}

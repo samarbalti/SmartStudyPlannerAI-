@@ -1,0 +1,46 @@
+@{
+    ViewData["Title"] = "Generer un planning";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="fas fa-magic me-2"></i>Generer un planning intelligent</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    L'IA analysera vos matieres, taches et examens pour creer un planning optimise.
+                </div>
+                <form method="post" action="/StudyPlan/Generate">
+                    <div class="mb-3">
+                        <label class="form-label">Date de debut</label>
+                        <input type="date" name="startDate" class="form-control" required 
+                               value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Date de fin</label>
+                        <input type="date" name="endDate" class="form-control" required 
+                               value="@DateTime.Now.AddDays(7).ToString("yyyy-MM-dd")" />
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-cog fa-spin me-2" style="display:none;" id="loadingIcon"></i>
+                            <span id="btnText">Generer le planning</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.querySelector('form').addEventListener('submit', function() {
+            document.getElementById('loadingIcon').style.display = 'inline-block';
+            document.getElementById('btnText').textContent = 'Generation en cours...';
+        });
+    </script>
+}

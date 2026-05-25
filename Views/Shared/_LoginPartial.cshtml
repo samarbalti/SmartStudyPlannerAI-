@@ -1,0 +1,18 @@
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <li class="nav-item">
+        <span class="nav-link">Bonjour @User.Identity.Name!</span>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/Account/Logout">Deconnexion</a>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link" href="/Account/Login">Connexion</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/Account/Register">Inscription</a>
+    </li>
+}

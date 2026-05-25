@@ -1,0 +1,71 @@
+@model IEnumerable<SmartStudyPlannerAI.Models.Entities.AIChat>
+@{
+    ViewData["Title"] = "Assistant IA";
+}
+
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card chat-card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-robot me-2"></i>Assistant IA - Smart Study</h5>
+                <small>Je suis la pour vous aider avec vos etudes !</small>
+            </div>
+            <div class="card-body chat-messages" id="chatMessages" style="height: 500px; overflow-y: auto;">
+                <div class="message ai-message">
+                    <div class="message-content">
+                        <i class="fas fa-robot me-2"></i>
+                        <span>Bonjour ! Je suis votre assistant d'etude intelligent. Je peux vous aider a :
+                        <ul class="mb-0 mt-2">
+                            <li>Organiser votre planning de revision</li>
+                            <li>Resumer vos cours</li>
+                            <li>Repondre a vos questions</li>
+                            <li>Generer des quiz</li>
+                            <li>Donner des conseils de methode</li>
+                        </ul>
+                        Comment puis-je vous aider aujourd'hui ?</span>
+                    </div>
+                </div>
+
+                @foreach (var chat in Model.OrderBy(c => c.CreatedAt))
+                {
+                    <div class="message user-message">
+                        <div class="message-content">
+                            <i class="fas fa-user me-2"></i>
+                            <span>@chat.UserMessage</span>
+                        </div>
+                    </div>
+                    <div class="message ai-message">
+                        <div class="message-content">
+                            <i class="fas fa-robot me-2"></i>
+                            <span>@Html.Raw(chat.AIResponse.Replace("\n", "<br/>"))</span>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="card-footer">
+                <div class="input-group">
+                    <input type="text" id="messageInput" class="form-control" placeholder="Posez votre question..." 
+                           onkeypress="if(event.key==='Enter') sendMessage()">
+                    <button class="btn btn-primary" type="button" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="mt-2 d-flex gap-2">
+                    <button class="btn btn-sm btn-outline-info" onclick="quickAction('resume')">
+                        <i class="fas fa-file-alt me-1"></i>Resumer un cours
+                    </button>
+                    <button class="btn btn-sm btn-outline-success" onclick="quickAction('quiz')">
+                        <i class="fas fa-question-circle me-1"></i>Generer un quiz
+                    </button>
+                    <button class="btn btn-sm btn-outline-warning" onclick="quickAction('plan')">
+                        <i class="fas fa-calendar me-1"></i>Planning de revision
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/chatbot.js"></script>
+}

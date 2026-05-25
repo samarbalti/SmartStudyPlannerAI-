@@ -1,0 +1,62 @@
+@model List<SmartStudyPlannerAI.Models.Entities.Notification>
+@{
+    ViewData["Title"] = "Notifications";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold"><i class="fas fa-bell me-2 text-warning"></i>Notifications</h2>
+    <button class="btn btn-outline-primary" onclick="markAllAsRead()">
+        <i class="fas fa-check-double me-2"></i>Tout marquer comme lu
+    </button>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        @if (Model.Any())
+        {
+            <div class="list-group list-group-flush">
+                @foreach (var notification in Model)
+                {
+                    <div class="list-group-item d-flex justify-content-between align-items-center @(notification.IsRead ? "" : "bg-light fw-bold")">
+                        <div class="d-flex align-items-center">
+                            <div class="notification-icon me-3">
+                                <i class="fas fa-@(notification.Type == "Task" ? "tasks text-primary" : notification.Type == "Exam" ? "calendar-alt text-danger" : "robot text-info") fa-lg"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">@notification.Title</h6>
+                                <p class="mb-0 text-muted">@notification.Message</p>
+                                <small class="text-muted">@notification.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
+                            </div>
+                        </div>
+                        @if (!notification.IsRead)
+                        {
+                            <button class="btn btn-sm btn-outline-primary" onclick="markAsRead(@notification.Id)">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        }
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="fas fa-bell-slash fa-4x text-muted mb-3"></i>
+                <h4 class="text-muted">Aucune notification</h4>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        async function markAsRead(id) {
+            await fetch(`/Notifications/MarkAsRead?id=${id}`, { method: 'POST' });
+            location.reload();
+        }
+        async function markAllAsRead() {
+            await fetch('/Notifications/MarkAllAsRead', { method: 'POST' });
+            location.reload();
+        }
+    </script>
+}

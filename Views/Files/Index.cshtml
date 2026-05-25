@@ -1,0 +1,102 @@
+@model IEnumerable<SmartStudyPlannerAI.Models.Entities.UploadedFile>
+@{
+    ViewData["Title"] = "Documents";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-file-upload me-2"></i>Mes documents</h2>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-cloud-upload-alt me-2"></i>Telecharger un document</h5>
+    </div>
+    <div class="card-body">
+        <form method="post" action="/Files/Upload" enctype="multipart/form-data">
+            <div class="input-group">
+                <input type="file" name="file" class="form-control" accept=".pdf,.jpg,.jpeg,.png,.gif,.bmp,.txt" required />
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-upload me-2"></i>Telecharger
+                </button>
+            </div>
+            <small class="text-muted">Formats acceptes: PDF, Images (JPG, PNG), TXT</small>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    @foreach (var file in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card file-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas @(file.FileType == ".pdf" ? "fa-file-pdf text-danger" : 
+                                      file.FileType == ".txt" ? "fa-file-alt text-primary" : 
+                                      "fa-file-image text-success") fa-2x me-3"></i>
+                        <div>
+                            <h6 class="mb-0 text-truncate" style="max-width: 200px;" title="@file.OriginalName">@file.OriginalName</h6>
+                            <small class="text-muted">@(file.FileSize / 1024) KB - @file.UploadedAt.ToString("dd/MM/yyyy HH:mm")</small>
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(file.ExtractedText))
+                    {
+                        <div class="alert alert-light border">
+                            <small class="text-muted">
+                                <i class="fas fa-check-circle text-success me-1"></i>
+                                Texte extrait (@(file.ExtractedText.Length > 100 ? file.ExtractedText.Substring(0, 100) + "..." : file.ExtractedText))
+                            </small>
+                        </div>
+                    }
+                </div>
+                <div class="card-footer">
+                    <a href="@file.FilePath" target="_blank" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-eye me-1"></i>Voir
+                    </a>
+                    @if (!string.IsNullOrEmpty(file.ExtractedText))
+                    {
+                        <button class="btn btn-sm btn-outline-info" onclick="summarizeFile(@file.Id)">
+                            <i class="fas fa-magic me-1"></i>Resumer
+                        </button>
+                    }
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteFile(@file.Id)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <div class="text-center py-5">
+        <i class="fas fa-folder-open fa-4x text-muted mb-3"></i>
+        <h4 class="text-muted">Aucun document</h4>
+        <p class="text-muted">Telechargez vos cours, notes ou captures d'ecran pour les analyser avec l'IA</p>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        function summarizeFile(fileId) {
+            fetch('/Files/Summarize/' + fileId, { method: 'POST' })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Resume genere avec succes !');
+                        location.reload();
+                    }
+                });
+        }
+
+        function deleteFile(fileId) {
+            if (!confirm('Supprimer ce document?')) return;
+            fetch('/Files/Delete/' + fileId, { method: 'POST' })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) location.reload();
+                });
+        }
+    </script>
+}
