@@ -40,7 +40,8 @@ public class AIChatController : Controller
         var userId = GetUserId();
         if (!userId.HasValue) return Unauthorized();
 
-        var response = await _aiService.ChatAsync(userId.Value, dto);
+        // Caller is the chat page, so suppress duplicate notify (we'll show messages inline)
+        var response = await _aiService.ChatAsync(userId.Value, dto, sendNotification: false);
         return Json(new { success = true, response });
     }
 

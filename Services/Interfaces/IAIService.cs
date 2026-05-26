@@ -5,7 +5,7 @@ namespace SmartStudyPlannerAI.Services.Interfaces;
 
 public interface IAIService
 {
-    Task<string> ChatAsync(int userId, AIChatDTO dto);
+    Task<string> ChatAsync(int userId, AIChatDTO dto, bool sendNotification = true);
     Task<string> SummarizeTextAsync(string text, string? context = null);
     Task<string> SummarizeFileAsync(int fileId, int userId);
     Task<Quiz> GenerateQuizAsync(int? subjectId, int userId, string quizType = "QCM");

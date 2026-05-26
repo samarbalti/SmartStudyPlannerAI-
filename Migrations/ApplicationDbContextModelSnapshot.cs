@@ -139,6 +139,37 @@ namespace SmartStudyPlannerAI.Migrations
                     b.ToTable("Notifications");
                 });
 
+            modelBuilder.Entity("SmartStudyPlannerAI.Models.Entities.PasswordResetOTP", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("OtpCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PasswordResetOTPs");
+                });
+
             modelBuilder.Entity("SmartStudyPlannerAI.Models.Entities.Quiz", b =>
                 {
                     b.Property<int>("Id")
@@ -484,6 +515,17 @@ namespace SmartStudyPlannerAI.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("SmartStudyPlannerAI.Models.Entities.PasswordResetOTP", b =>
+                {
+                    b.HasOne("SmartStudyPlannerAI.Models.Entities.User", "User")
+                        .WithMany("PasswordResetOTPs")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("SmartStudyPlannerAI.Models.Entities.Quiz", b =>
                 {
                     b.HasOne("SmartStudyPlannerAI.Models.Entities.Subject", "Subject")
@@ -592,6 +634,8 @@ namespace SmartStudyPlannerAI.Migrations
                     b.Navigation("Exams");
 
                     b.Navigation("Notifications");
+
+                    b.Navigation("PasswordResetOTPs");
 
                     b.Navigation("Quizzes");
 

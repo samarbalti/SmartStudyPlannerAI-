@@ -54,12 +54,16 @@ public class ExamsController : Controller
             return View(dto);
         }
 
+        // Convert date input (local midnight) to UTC
+        var localDate = DateTime.SpecifyKind(dto.ExamDate, DateTimeKind.Local);
+        var examDateUtc = TimeZoneInfo.ConvertTime(localDate, TimeZoneInfo.Local, TimeZoneInfo.Utc);
+
         var exam = new Exam
         {
             UserId = userId.Value,
             Title = dto.Title,
             Description = dto.Description,
-            ExamDate = dto.ExamDate,
+            ExamDate = examDateUtc,
             StartTime = dto.StartTime,
             EndTime = dto.EndTime,
             Location = dto.Location,
@@ -111,9 +115,13 @@ public class ExamsController : Controller
 
         if (exam == null) return NotFound();
 
+        // Convert date input (local midnight) to UTC
+        var localDate = DateTime.SpecifyKind(dto.ExamDate, DateTimeKind.Local);
+        var examDateUtc = TimeZoneInfo.ConvertTime(localDate, TimeZoneInfo.Local, TimeZoneInfo.Utc);
+
         exam.Title = dto.Title;
         exam.Description = dto.Description;
-        exam.ExamDate = dto.ExamDate;
+        exam.ExamDate = examDateUtc;
         exam.StartTime = dto.StartTime;
         exam.EndTime = dto.EndTime;
         exam.Location = dto.Location;

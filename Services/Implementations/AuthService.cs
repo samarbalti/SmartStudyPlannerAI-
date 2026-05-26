@@ -8,6 +8,7 @@ using SmartStudyPlannerAI.Services.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace SmartStudyPlannerAI.Services.Implementations;
 
@@ -16,12 +17,14 @@ public class AuthService : IAuthService
     private readonly IUserRepository _userRepository;
     private readonly IConfiguration _configuration;
     private readonly IEmailService _emailService;
+    private readonly ApplicationDbContext _context;
 
-    public AuthService(IUserRepository userRepository, IConfiguration configuration, IEmailService emailService)
+    public AuthService(IUserRepository userRepository, IConfiguration configuration, IEmailService emailService, ApplicationDbContext context)
     {
         _userRepository = userRepository;
         _configuration = configuration;
         _emailService = emailService;
+        _context = context;
     }
 
     public async Task<(User? user, string? token)> LoginAsync(LoginDTO dto)
@@ -124,5 +127,83 @@ public class AuthService : IAuthService
         );
 
         return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    // ==================== OTP METHODS ====================
+    
+    /// <summary>
+    /// Generate and send OTP to user's email for password reset
+    /// </summary>
+    public async Task<bool> RequestPasswordResetOTPAsync(string email)
+    {
+        var user = await _userRepository.GetByEmailAsync(email);
+        if (user == null) return false;
+
+        // Generate 6-digit OTP
+        var otp = GenerateOTP();
+        
+        // Save OTP to database (valid for 10 minutes)
+        var resetOtp = new PasswordResetOTP
+        {
+            UserId = user.Id,
+            OtpCode = otp,
+            CreatedAt = DateTime.UtcNow,
+            ExpiresAt = DateTime.UtcNow.AddMinutes(10),
+            IsUsed = false
+        };
+
+        _context.PasswordResetOTPs.Add(resetOtp);
+        await _context.SaveChangesAsync();
+
+        // Send OTP via email
+        await _emailService.SendOTPEmailAsync(user.Email, otp);
+        return true;
+    }
+
+    /// <summary>
+    /// Verify OTP and return true if valid
+    /// </summary>
+    public async Task<bool> VerifyPasswordResetOTPAsync(string email, string otpCode)
+    {
+        var user = await _userRepository.GetByEmailAsync(email);
+        if (user == null) return false;
+
+        // Find the most recent unused OTP for this user
+        var otp = await _context.PasswordResetOTPs
+            .Where(o => o.UserId == user.Id 
+                     && o.OtpCode == otpCode 
+                     && !o.IsUsed 
+                     && o.ExpiresAt > DateTime.UtcNow)
+            .OrderByDescending(o => o.CreatedAt)
+            .FirstOrDefaultAsync();
+
+        if (otp == null) return false;
+
+        // Mark OTP as used
+        otp.IsUsed = true;
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    /// <summary>
+    /// Reset password after OTP verification
+    /// </summary>
+    public async Task<bool> ResetPasswordWithOTPAsync(string email, string newPassword)
+    {
+        var user = await _userRepository.GetByEmailAsync(email);
+        if (user == null) return false;
+
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+        await _userRepository.UpdateAsync(user);
+        return true;
+    }
+
+    /// <summary>
+    /// Generate a random 6-digit OTP
+    /// </summary>
+    private string GenerateOTP()
+    {
+        var random = new Random();
+        return random.Next(100000, 999999).ToString();
     }
 }

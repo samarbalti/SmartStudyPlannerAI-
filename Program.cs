@@ -56,6 +56,9 @@ builder.Services.AddSignalR();
 // MVC
 builder.Services.AddControllersWithViews();
 
+// Background notification checker
+builder.Services.AddHostedService<SmartStudyPlannerAI.Services.Implementations.NotificationBackgroundService>();
+
 var app = builder.Build();
 
 // Middleware pipeline

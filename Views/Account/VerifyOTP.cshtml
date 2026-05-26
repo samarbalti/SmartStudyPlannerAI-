@@ -1,0 +1,91 @@
+@{
+    ViewData["Title"] = "Vérifier le code";
+    var email = TempData["Email"]?.ToString() ?? "";
+}
+
+<div class="row justify-content-center align-items-center min-vh-100">
+    <div class="col-md-5">
+        <div class="card shadow-lg">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="fas fa-shield-alt me-2"></i>Vérifier votre identité</h4>
+            </div>
+            <div class="card-body p-5">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        @TempData["Success"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+
+                @if (!ViewData.ModelState.IsValid && ViewData.ModelState.Values.Any(v => v.Errors.Any()))
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Erreur !</strong>
+                        @foreach (var modelState in ViewData.ModelState.Values)
+                        {
+                            @foreach (var error in modelState.Errors)
+                            {
+                                <div>@error.ErrorMessage</div>
+                            }
+                        }
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+
+                <div class="text-center mb-4">
+                    <i class="fas fa-envelope-open-text fa-3x text-primary mb-3" style="display: block;"></i>
+                    <p class="text-muted">
+                        Un code de vérification a été envoyé à<br>
+                        <strong>@email</strong>
+                    </p>
+                </div>
+
+                <form method="post" action="/Account/VerifyOTP">
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Code de vérification (6 chiffres)</label>
+                        <input type="hidden" name="email" value="@email" />
+                        <input type="text" 
+                               name="otpCode" 
+                               class="form-control form-control-lg text-center" 
+                               placeholder="000000" 
+                               maxlength="6"
+                               pattern="[0-9]{6}"
+                               required 
+                               style="font-size: 24px; letter-spacing: 10px; font-weight: bold;" />
+                        <small class="text-muted d-block mt-2">
+                            <i class="fas fa-clock me-1"></i>Le code expire dans 10 minutes
+                        </small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
+                        <i class="fas fa-check me-2"></i>Vérifier le code
+                    </button>
+                </form>
+
+                <div class="text-center">
+                    <small class="text-muted">
+                        Vous n'avez pas reçu le code ?<br>
+                        <a href="/Account/ForgotPassword" class="text-primary fw-bold">Demander un nouveau code</a>
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 text-center">
+            <a href="/Account/Login" class="text-muted text-decoration-none">
+                <i class="fas fa-arrow-left me-2"></i>Retour à la connexion
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .min-vh-100 {
+        min-height: 100vh;
+    }
+
+    input[type="text"]::placeholder {
+        letter-spacing: 2px;
+    }
+</style>

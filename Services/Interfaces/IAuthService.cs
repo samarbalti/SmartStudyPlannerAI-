@@ -12,4 +12,9 @@ public interface IAuthService
     Task<bool> ResetPasswordAsync(string token, string newPassword);
     Task<User?> GetCurrentUserAsync(int userId);
     string GenerateJwtToken(User user);
+    
+    // OTP-based password reset methods
+    Task<bool> RequestPasswordResetOTPAsync(string email);
+    Task<bool> VerifyPasswordResetOTPAsync(string email, string otpCode);
+    Task<bool> ResetPasswordWithOTPAsync(string email, string newPassword);
 }

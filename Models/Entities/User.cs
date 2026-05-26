@@ -35,4 +35,5 @@ public class User
     public ICollection<Summary> Summaries { get; set; } = new List<Summary>();
     public ICollection<Quiz> Quizzes { get; set; } = new List<Quiz>();
     public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+    public ICollection<PasswordResetOTP> PasswordResetOTPs { get; set; } = new List<PasswordResetOTP>();
 }

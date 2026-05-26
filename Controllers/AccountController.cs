@@ -108,10 +108,74 @@ public class AccountController : Controller
     [HttpPost]
     public async Task<IActionResult> ForgotPassword(string email)
     {
-        var success = await _authService.ForgotPasswordAsync(email);
-        TempData["Success"] = success 
-            ? "Un email de réinitialisation a été envoyé." 
-            : "Aucun compte trouvé avec cet email.";
+        try
+        {
+            var success = await _authService.RequestPasswordResetOTPAsync(email);
+            if (!success)
+            {
+                TempData["Error"] = "Aucun compte trouvé avec cet email.";
+                return RedirectToAction("ForgotPassword");
+            }
+
+            TempData["Success"] = "Code de vérification envoyé à votre email.";
+            TempData["Email"] = email;
+            return RedirectToAction("VerifyOTP");
+        }
+        catch (Exception ex)
+        {
+            TempData["Error"] = ex.Message;
+            return RedirectToAction("ForgotPassword");
+        }
+    }
+
+    [HttpGet]
+    public IActionResult VerifyOTP()
+    {
+        var email = TempData["Email"]?.ToString();
+        if (string.IsNullOrEmpty(email))
+            return RedirectToAction("ForgotPassword");
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> VerifyOTP(string email, string otpCode)
+    {
+        var success = await _authService.VerifyPasswordResetOTPAsync(email, otpCode);
+        if (!success)
+        {
+            ModelState.AddModelError("", "Code de vérification invalide ou expiré.");
+            return View();
+        }
+        TempData["Success"] = "Code de vérification confirmé. Entrez votre nouveau mot de passe.";
+        TempData["Email"] = email;
+        return RedirectToAction("SetNewPassword");
+    }
+
+    [HttpGet]
+    public IActionResult SetNewPassword()
+    {
+        var email = TempData["Email"]?.ToString();
+        if (string.IsNullOrEmpty(email))
+            return RedirectToAction("ForgotPassword");
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> SetNewPassword(string email, string newPassword, string confirmPassword)
+    {
+        if (newPassword != confirmPassword)
+        {
+            ModelState.AddModelError("", "Les mots de passe ne correspondent pas.");
+            return View();
+        }
+
+        var success = await _authService.ResetPasswordWithOTPAsync(email, newPassword);
+        if (!success)
+        {
+            ModelState.AddModelError("", "Erreur lors de la réinitialisation du mot de passe.");
+            return View();
+        }
+        TempData["Success"] = "Mot de passe réinitialisé avec succès ! Vous pouvez maintenant vous connecter.";
         return RedirectToAction("Login");
     }
 

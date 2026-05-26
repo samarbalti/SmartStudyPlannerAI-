@@ -3,10 +3,11 @@
 let connection = null;
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize SignalR
+    // Initialize SignalR with auth token
     if (typeof signalR !== 'undefined') {
+        const token = getCookie('AuthToken');
         connection = new signalR.HubConnectionBuilder()
-            .withUrl('/notificationHub')
+            .withUrl('/notificationHub', token ? { accessTokenFactory: () => token } : {})
             .withAutomaticReconnect()
             .build();
 
@@ -103,6 +104,13 @@ function markAsRead(id) {
 function markAllAsRead() {
     fetch('/Notifications/MarkAllAsRead', { method: 'POST' })
         .then(() => loadNotifications());
+}
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
 }
 
 function escapeHtml(text) {

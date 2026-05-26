@@ -196,6 +196,15 @@
           }
         }
       },
+      "Mailtrap/1.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.1/Mailtrap.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/Mailtrap.dll": {}
+        }
+      },
       "Microsoft.AspNetCore.Authentication.JwtBearer/8.0.5": {
         "type": "package",
         "dependencies": {
@@ -1631,6 +1640,19 @@
         "lib/netstandard2.1/MailKit.xml",
         "mailkit.4.8.0.nupkg.sha512",
         "mailkit.nuspec"
+      ]
+    },
+    "Mailtrap/1.1.0": {
+      "sha512": "rXBYEj0ljgabkKqPKFX+v4ovmxYov6fUrsNM7OLgEw/Gwcbie20CeRjBJA0G8RrSTD0O8eJA7u8PjNQTNFAOGg==",
+      "type": "package",
+      "path": "mailtrap/1.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.png",
+        "lib/netstandard2.1/Mailtrap.dll",
+        "mailtrap.1.1.0.nupkg.sha512",
+        "mailtrap.nuspec"
       ]
     },
     "Microsoft.AspNetCore.Authentication.JwtBearer/8.0.5": {
@@ -3293,6 +3315,7 @@
       "BCrypt.Net-Next >= 4.0.3",
       "GroqApiLibrary >= 2.0.0",
       "MailKit >= 4.8.0",
+      "Mailtrap >= 1.1.0",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 8.0.5",
       "Microsoft.EntityFrameworkCore.SqlServer >= 8.0.5",
       "Microsoft.EntityFrameworkCore.Sqlite >= 8.0.5",
@@ -3367,6 +3390,10 @@
           "MailKit": {
             "target": "Package",
             "version": "[4.8.0, )"
+          },
+          "Mailtrap": {
+            "target": "Package",
+            "version": "[1.1.0, )"
           },
           "Microsoft.AspNetCore.Authentication.JwtBearer": {
             "target": "Package",

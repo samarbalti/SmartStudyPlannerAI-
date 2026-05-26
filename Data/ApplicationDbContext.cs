@@ -17,6 +17,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Summary> Summaries { get; set; }
     public DbSet<Quiz> Quizzes { get; set; }
     public DbSet<Notification> Notifications { get; set; }
+    public DbSet<PasswordResetOTP> PasswordResetOTPs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -135,6 +136,16 @@ public class ApplicationDbContext : DbContext
             entity.HasKey(e => e.Id);
             entity.HasOne(e => e.User)
                   .WithMany(u => u.Notifications)
+                  .HasForeignKey(e => e.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // Configuration PasswordResetOTP
+        modelBuilder.Entity<PasswordResetOTP>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasOne(e => e.User)
+                  .WithMany(u => u.PasswordResetOTPs)
                   .HasForeignKey(e => e.UserId)
                   .OnDelete(DeleteBehavior.Cascade);
         });

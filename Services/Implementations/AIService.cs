@@ -14,16 +14,18 @@ public class AIService : IAIService
     private readonly IConfiguration _configuration;
     private readonly ApplicationDbContext _context;
     private readonly HttpClient _httpClient;
+    private readonly INotificationService _notificationService;
 
-    public AIService(IConfiguration configuration, ApplicationDbContext context)
+    public AIService(IConfiguration configuration, ApplicationDbContext context, INotificationService notificationService)
     {
         _configuration = configuration;
         _context = context;
+        _notificationService = notificationService;
         _httpClient = new HttpClient();
         _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_configuration["Groq:ApiKey"]}");
     }
 
-    public async Task<string> ChatAsync(int userId, AIChatDTO dto)
+    public async Task<string> ChatAsync(int userId, AIChatDTO dto, bool sendNotification = true)
     {
         var systemPrompt = @"Tu es un assistant étudiant intelligent et bienveillant. Tu aides les étudiants à :
 - Organiser leurs études et leur temps
@@ -68,6 +70,20 @@ Réponds en français de manière claire, structurée et pédagogique.";
         };
         _context.AIChats.Add(chat);
         await _context.SaveChangesAsync();
+
+        // Optionally send a lightweight notification to inform the user that the AI response is ready
+        if (sendNotification)
+        {
+            try
+            {
+                var preview = aiResponse.Length > 200 ? aiResponse.Substring(0, 200) + "..." : aiResponse;
+                await _notificationService.CreateAINotificationAsync(userId, "Réponse IA prête", preview);
+            }
+            catch
+            {
+                // Swallow notification errors to avoid breaking chat
+            }
+        }
 
         return aiResponse;
     }

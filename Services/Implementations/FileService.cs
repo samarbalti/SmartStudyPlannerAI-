@@ -24,12 +24,17 @@ public class FileService : IFileService
     {
         if (file == null || file.Length == 0) return null;
 
-        var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads");
-        if (!Directory.Exists(uploadsFolder))
-            Directory.CreateDirectory(uploadsFolder);
+        var uploadsRoot = Path.Combine(_environment.WebRootPath, "uploads");
+        if (!Directory.Exists(uploadsRoot))
+            Directory.CreateDirectory(uploadsRoot);
+
+        var userFolderName = $"user_{userId}";
+        var userFolder = Path.Combine(uploadsRoot, userFolderName);
+        if (!Directory.Exists(userFolder))
+            Directory.CreateDirectory(userFolder);
 
         var uniqueFileName = $"{Guid.NewGuid()}_{file.FileName}";
-        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+        var filePath = Path.Combine(userFolder, uniqueFileName);
 
         using (var stream = new FileStream(filePath, FileMode.Create))
         {
@@ -41,7 +46,7 @@ public class FileService : IFileService
             UserId = userId,
             FileName = uniqueFileName,
             OriginalName = file.FileName,
-            FilePath = $"/uploads/{uniqueFileName}",
+            FilePath = $"/uploads/{userFolderName}/{uniqueFileName}",
             FileType = Path.GetExtension(file.FileName).ToLower(),
             FileSize = file.Length
         };

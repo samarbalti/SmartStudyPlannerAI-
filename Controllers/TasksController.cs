@@ -58,6 +58,14 @@ public class TasksController : Controller
             return View(dto);
         }
 
+        // Convert datetime-local (local time) to UTC
+        DateTime? dueDate = null;
+        if (dto.DueDate.HasValue)
+        {
+            var localTime = DateTime.SpecifyKind(dto.DueDate.Value, DateTimeKind.Local);
+            dueDate = TimeZoneInfo.ConvertTime(localTime, TimeZoneInfo.Local, TimeZoneInfo.Utc);
+        }
+
         var task = new TaskItem
         {
             UserId = userId.Value,
@@ -65,7 +73,7 @@ public class TasksController : Controller
             Description = dto.Description,
             Priority = dto.Priority,
             Status = dto.Status,
-            DueDate = dto.DueDate,
+            DueDate = dueDate,
             SubjectId = dto.SubjectId
         };
 
@@ -113,11 +121,19 @@ public class TasksController : Controller
 
         if (task == null) return NotFound();
 
+        // Convert datetime-local (local time) to UTC
+        DateTime? dueDate = null;
+        if (dto.DueDate.HasValue)
+        {
+            var localTime = DateTime.SpecifyKind(dto.DueDate.Value, DateTimeKind.Local);
+            dueDate = TimeZoneInfo.ConvertTime(localTime, TimeZoneInfo.Local, TimeZoneInfo.Utc);
+        }
+
         task.Title = dto.Title;
         task.Description = dto.Description;
         task.Priority = dto.Priority;
         task.Status = dto.Status;
-        task.DueDate = dto.DueDate;
+        task.DueDate = dueDate;
         task.SubjectId = dto.SubjectId;
 
         if (dto.Status == "Completed" && task.CompletedAt == null)
